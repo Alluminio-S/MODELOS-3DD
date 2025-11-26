@@ -1,0 +1,172 @@
+<!DOCTYPE html> 
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MY 3D PROJECT</title>
+
+  <!-- Bulma CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+
+  <!-- Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap">
+
+  <style>
+    body {
+      background-image: url('fondito.png'); 
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: white;
+      font-family: 'Poppins', sans-serif;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    h1.title {
+      color: #ffffff;
+      text-shadow: 0 0 15px #170953;
+      margin-bottom: 2rem;
+    }
+
+    /* --- GRID DE PERSONAJES --- */
+    .character {
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-radius: 15px;
+      transition: all 0.3s ease;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .character.selected {
+      border-color: #88d083;
+      box-shadow: 0 0 20px #88d083, inset 0 0 10px #88d083;
+      background-color: rgba(151, 241, 129, 0.695);
+    }
+
+    .character img {
+      border-radius: 10px;
+      width: 100%;
+    }
+
+    /* --- DETALLITOS CAJA PRINCIPAL --- */
+    #characterDetail {
+      background: rgba(198, 235, 189, 0.695);
+      border: 2px solid #a8c891;
+      border-radius: 12px;
+      padding: 1.5rem;
+      box-shadow: 0 0 20px rgba(0,0,0,0.6);
+      backdrop-filter: blur(6px);
+      min-height: 500px;
+    }
+
+    /* SKETCHFAB */
+    #charViewer iframe {
+      width: 100%;
+      height: 380px;
+      border: none;
+      border-radius: 15px;
+    }
+
+    #charLore {
+      color: #000000;
+      font-size: 1.1rem;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="section">
+    <h1 class="title has-text-centered">MY 3D MODELS</h1>
+
+    <div class="columns">
+      <!-- GRID DE PERSONAJES -->
+      <div class="column is-half">
+        <div class="columns is-multiline" id="characterGrid"></div>
+      </div>
+
+      <!-- VISOR 3D Y LORE -->
+      <div class="column is-half">
+        <div id="characterDetail" class="box has-text-centered">
+
+          <h2 id="charName" class="title is-4">Nombre del personaje</h2>
+
+          <!-- CONTENEDOR DEL EMBED -->
+          <div id="charViewer"></div>
+
+          <p id="charLore">Descripción del personaje</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const characters = [
+      {
+        name: "Cámara",
+        image: "camara.png",
+        lore: "Foto, sonríe!!!",
+        embed: `<iframe title="Cámara" allowfullscreen src="https://sketchfab.com/models/d0f004de218041f2848ddc2b9f93ba99/embed"></iframe>`
+      },
+      {
+        name: "Camisa",
+        image: "camisa.png",
+        lore: "Camisa manchada",
+        embed: `<iframe title="Camisa" allowfullscreen src="https://sketchfab.com/models/c99862955afa4fedac06b9b454b07793/embed"></iframe>`
+      },
+      {
+        name: "Chaleco",
+        image: "chaleco.png",
+        lore: "Chalequito mexicano",
+        embed: `<iframe title="Chaleco" allowfullscreen src="https://sketchfab.com/models/18e30c38730d43c6b590b2b6eb8b9ee0/embed"></iframe>`
+      },
+      {
+        name: "Zapato",
+        image: "zapato.png",
+        lore: "Zapato pocho",
+        embed: `<iframe title="Zapatoo" allowfullscreen src="https://sketchfab.com/models/3f866aac4aa1409aaa3dd34d79c499a5/embed"></iframe>`
+      }
+    ];
+
+    function showCharacter(i) {
+      const char = characters[i];
+
+      document.getElementById("charName").textContent = char.name;
+      document.getElementById("charLore").textContent = char.lore;
+
+      // Insertar embed de Sketchfab
+      document.getElementById("charViewer").innerHTML = char.embed;
+
+      // Marcar selección visual
+      document.querySelectorAll(".character").forEach(c => c.classList.remove("selected"));
+      document.querySelector(`[data-id='${i}']`).classList.add("selected");
+    }
+
+    // CAJITAS
+    const grid = document.getElementById("characterGrid");
+
+    characters.forEach((c, i) => {
+      const card = document.createElement("div");
+      card.className = "column is-one-third";
+
+      card.innerHTML = `
+        <div class="character card has-text-centered" data-id="${i}" onclick="showCharacter(${i})">
+          <figure class="image is-square">
+            <img src="${c.image}">
+            <img src="${c.hover}" class="hover">
+          </figure>
+          <div class="card-content">${c.name}</div>
+        </div>
+      `;
+
+      grid.appendChild(card);
+    });
+
+    // Mostrar el primero por defecto
+    showCharacter(0);
+  </script>
+</body>
+</html>
